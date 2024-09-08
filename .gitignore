@@ -1,0 +1,5 @@
+# COMPILED FILES 
+__pycache__
+
+# VIRTUAL ENVIROMENT
+.venv
