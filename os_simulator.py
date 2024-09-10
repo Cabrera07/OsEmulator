@@ -62,17 +62,25 @@ class OS:
         """
         Update the state of an individual process based on its progress and execution time.
         """
-        running_processes = len([p for p in self.processes if p.state == ProcessState.RUNNING])
+        running_processes = [p for p in self.processes if p.state == ProcessState.RUNNING]
 
         if process.state == ProcessState.NEW:
             process.state = ProcessState.READY  # Transition to READY state
 
         elif process.state == ProcessState.READY:
-            if running_processes < 10:
+            if len(running_processes) < 10:
                 if random.random() < 0.2:
                     process.state = ProcessState.RUNNING
             else:
-                process.state = ProcessState.BLOCKED_SUSPENDED  # Too many running processes
+                # Find the process with the lowest priority among running processes
+                lowest_priority_process = min(running_processes, key=lambda p: self.get_priority_value(p.priority))
+                
+                # If the current process has higher priority, swap them
+                if self.get_priority_value(process.priority) > self.get_priority_value(lowest_priority_process.priority):
+                    lowest_priority_process.state = ProcessState.BLOCKED_SUSPENDED
+                    process.state = ProcessState.RUNNING
+                else:
+                    process.state = ProcessState.BLOCKED_SUSPENDED
 
         elif process.state == ProcessState.RUNNING:
             process.progress += 1
@@ -82,7 +90,7 @@ class OS:
 
         elif process.state == ProcessState.BLOCKED_SUSPENDED:
             # Move to READY_SUSPENDED if there's space
-            if running_processes < 10:
+            if len(running_processes) < 10:
                 self.schedule_transition(process, ProcessState.READY_SUSPENDED, 5)
 
         elif process.state == ProcessState.READY_SUSPENDED:
@@ -93,6 +101,7 @@ class OS:
             # Once READY, move to RUNNING 
             self.schedule_transition(process, ProcessState.RUNNING, 5)
 
+
     def schedule_transition(self, process, target_state, delay):
         """
         Schedule a process to transition to another state after a delay.
@@ -101,6 +110,18 @@ class OS:
             process.scheduled = True  # Prevent multiple transitions being scheduled
             threading.Timer(delay, lambda: self.set_process_state(process, target_state)).start()
 
+    def get_priority_value(self, priority):
+        """
+        Convert priority string to a numeric value for comparison.
+        """
+        priority_values = {
+            'High': 4,
+            'Medium High': 3,
+            'Medium Low': 2,
+            'Low': 1
+        }
+        return priority_values.get(priority, 0)
+    
     def set_process_state(self, process, state):
         """
         Set the state of a process and reset its scheduled flag.
@@ -169,5 +190,16 @@ class OS:
                     process.manual_state = ProcessState.BLOCKED
                 elif new_state == ProcessState.READY:
                     process.state = ProcessState.READY
-                    process.manual_state = None  # Continue regular process
+                    process.manual_state = ProcessState.READY
+                    # Start a timer to change the state after 1 second
+                    threading.Timer(1.0, self.release_ready_state, args=[process]).start()
                 break
+        
+            
+    def release_ready_state(self, process):
+        """
+        Release the process from the READY state after 1 second.
+        """
+        if process.state == ProcessState.READY and process.manual_state == ProcessState.READY:
+            process.manual_state = None  # Continue regular process
+            print(f"Process {process.pid} released from READY state")
