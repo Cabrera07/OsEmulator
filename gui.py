@@ -252,11 +252,13 @@ class UI(ctk.CTk):
         Update the button states when the OS is killed or resumed.
         """
         if killed:
+            self.priority_menu.configure(state="disabled")
             self.start_button.configure(state="normal")
             self.stop_button.configure(state="disabled")
             self.kill_button.configure(state="disabled")
             self.add_process_button.configure(state="disabled")
         else:
+            self.priority_menu.configure(state="normal")
             self.start_button.configure(state="normal")
             self.stop_button.configure(state="normal")
             self.kill_button.configure(state="normal")
