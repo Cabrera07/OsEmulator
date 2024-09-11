@@ -243,9 +243,8 @@ class UI(ctk.CTk):
             new_state = ProcessState.BLOCKED
         elif new_state == "End":
             new_state = ProcessState.TERMINATED
-        elif new_state == "Suspended":
-            new_state = ProcessState.BLOCKED_SUSPENDED
-
+        
+        
         # Change the process state in the OS simulator
         self.os.change_process_state(int(pid), new_state)
         
@@ -263,8 +262,7 @@ class UI(ctk.CTk):
                 process.widgets["state_menu"].configure(values=["Unblocked", "End"])
             elif process.state == ProcessState.READY:
                 process.widgets["state_menu"].configure(values=["Blocked", "End"])
-            elif process.state == ProcessState.BLOCKED_SUSPENDED:
-                process.widgets["state_menu"].configure(values=["Unblocked", "End"])
+            
 
 
     def update_button_states(self, killed):
