@@ -13,7 +13,7 @@ class ProcessState(Enum):
 
 # CLASS TO REPRESENT THE OS PROCESS
 class Process:
-    # MAPPING PRIORITY LEVELS TO EXECUTION TIMES (LONGER EXECUTION TIMES)
+    # MAPPING PRIORITY LEVELS TO EXECUTION TIMES (LONGER EXECUTION TIMES FOR LOWER PRIORITIES)
     PRIORITY_EXECUTION_TIMES = {
         'High': 100,          # High priority gets the shortest execution time
         'Medium High': 200,   # Medium High priority gets more time
