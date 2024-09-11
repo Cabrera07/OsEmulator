@@ -1,6 +1,6 @@
 # 🎛️ OS Process Management Emulator  <!-- omit from toc -->
 
-![alt text](228_3x_shots_so.png)
+![alt text](./images/mockup.png)
 
 A Python-based operating system process management emulator designed to simulate core OS functionalities such as process creation, suspension, termination, and state transitions. The project features a graphical user interface (GUI) to monitor and manage processes dynamically.
 
