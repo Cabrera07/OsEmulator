@@ -2,21 +2,24 @@ import threading
 import time
 from process import Process, ProcessState
 
+
 # CLASS TO EMULATE OS PROCESS MANAGEMENT
 class OS:
     def __init__(self):
         """
         Initialize the OS simulator with an empty process list and management flags.
         """
-        self.processes = []  # List of all processes in the OS
+        self.processes = []   # List of all processes in the OS
         self.running = False  # Flag to indicate if the OS is running
-        self.killed = False  # Flag for killing the OS (zombie mode)
-        self.thread = None  # Thread for running the OS in the background
-        self.num_cores = 1  # Default to 1 core  
+        self.killed = False   # Flag for killing the OS (zombie mode)
+        self.thread = None    # Thread for running the OS in the background
+        self.num_cores = 1    # Default to 1 core  
+
 
     def set_num_cores(self, num_cores):
         """Set the number of CPU cores."""
         self.num_cores = num_cores
+    
     
     # METHOD TO ADD A NEW PROCESS WITH A SPECIFIED PRIORITY
     def add_process(self, priority):
@@ -30,6 +33,7 @@ class OS:
         process = Process(pid, priority)
         self.processes.append(process)
         return process
+
 
     # MAIN LOOP FOR PROCESS MANAGEMENT
     def run(self):
@@ -56,6 +60,7 @@ class OS:
                     # Process ready or in its default state
                     elif process.manual_state is None or process.manual_state == ProcessState.READY:
                         self.update_process_state(process)  # Update the state based on current progress
+            
             else:
                 # If the OS is killed, move non-terminated processes to zombie state
                 for process in self.processes:
@@ -65,6 +70,7 @@ class OS:
                         process.state = ProcessState.ZOMBIE
 
             time.sleep(0.1)  # Pause for a short time between each loop
+
 
     def update_process_state(self, process):
         """
@@ -162,7 +168,7 @@ class OS:
 
     def remove_terminated_process(self, process):
         """
-        Remove a process from the OS once it has been in the TERMINATED state for 3 seconds.
+        Remove a process from the OS once it has been in the TERMINATED 
         """
         if process.state == ProcessState.TERMINATED:
             self.processes.remove(process)
@@ -183,7 +189,7 @@ class OS:
         """
         Stop the OS simulation and wait for the thread to terminate.
         """
-        self.running = False #
+        self.running = False 
         if self.thread:
             self.thread.join(timeout=1.0) 
         self.thread = None
@@ -227,7 +233,7 @@ class OS:
             
     def release_ready_state(self, process):
         """
-        Release the process from the READY state after 1 second.
+        Release the process from the READY state after 
         """
         if process.state == ProcessState.READY and process.manual_state == ProcessState.READY:
             process.manual_state = None  # Continue regular process

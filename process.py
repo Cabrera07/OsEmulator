@@ -1,15 +1,18 @@
 from enum import Enum
 
+
 # DEFINE THE POSSIBLE STATES OF A PROCESS
 class ProcessState(Enum):
-    NEW = "New"  # Process has been created
-    READY = "Ready"  # Process is ready to be executed
-    RUNNING = "Running"  # Process is in execution
-    BLOCKED = "Blocked"  # The execution of the process is stopped
-    TERMINATED = "Terminated"  # Process has completed
-    ZOMBIE = "Zombie"  # State to represent zombie mode
-    BLOCKED_SUSPENDED = "Blocked Suspended"  
-    READY_SUSPENDED = "Ready Suspended" 
+    NEW = "New"                 # Process has been created
+    READY = "Ready"             # Process is ready to be executed
+    RUNNING = "Running"         # Process is in execution
+    BLOCKED = "Blocked"         # The execution of the process is stopped
+    TERMINATED = "Terminated"   # Process has completed
+    ZOMBIE = "Zombie"           # State to represent zombie mode
+    BLOCKED_SUSPENDED = "Blocked Suspended"  # Process that has to wait to be executed 
+    READY_SUSPENDED = "Ready Suspended"      # Process that is getting ready to be executed 
+
+
 
 # CLASS TO REPRESENT THE OS PROCESS
 class Process:
@@ -20,6 +23,7 @@ class Process:
         'Medium Low': 300,    # Medium Low priority gets even more time
         'Low': 400,           # Low priority gets the longest execution time
     }
+
 
     def __init__(self, pid, priority):
         """
